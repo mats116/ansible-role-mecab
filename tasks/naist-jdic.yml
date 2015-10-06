@@ -1,0 +1,40 @@
+- name: copy naist-jdic src
+  unarchive:
+    src: mecab-naist-jdic-0.6.3b-20111013.tar.gz
+    dest: /usr/local/src/
+
+- name: install naist-jdic
+  command: "{{ item }}"
+  args:
+    chdir: /usr/local/src/mecab-naist-jdic-0.6.3b-20111013
+    creates: /usr/lib/mecab/dic/naist-jdic
+  with_items:
+    - './configure --with-charset=utf8 --with-mecab-config=/usr/bin/mecab-config'
+    - 'make'
+    - 'make install'
+
+- name: modify mecabrc dicdir
+  lineinfile:
+    dest: /etc/mecabrc
+    line: "dicdir = /usr/lib/mecab/dic/naist-jdic"
+    regexp: "^dicdir"
+    state: present
+
+#- name: modify custom dic source  
+#  copy:
+#    src: "{{ item }}"
+#    dest: "/usr/lib/mecab/dic/naist-jdic/{{ item }}"
+#    owner: root
+#    group: root
+#    mode: 0644
+#  with_items:
+#    - wikipedia.csv
+#    - hatena.csv
+#    - nikoniko.csv
+
+#- name: create custom naist-jdic
+#  command: /usr/lib/mecab/mecab-dict-index -f euc-jp -t utf8 -d /usr/lib/mecab/dic/naist-jdic -o /usr/local/src/
+
+
+#- name: modify custom naist-jdic
+#  command: cp -f /usr/local/src/sys.dic /usr/lib/mecab/dic/naist-jdic/sys.dic

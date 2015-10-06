@@ -1,0 +1,19 @@
+- name: modify repository
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - 'deb http://packages.groonga.org/ubuntu/ precise universe'
+    #- 'deb-src http://packages.groonga.org/ubuntu/ precise universe'
+
+- name: install mecab
+  sudo: yes
+  apt:
+    name: "{{ item }}={{ version }}*"
+    state: present
+    force: yes
+  with_items:
+    - "mecab"
+    - "libmecab-dev"
+
+- include: naist-jdic.yml
