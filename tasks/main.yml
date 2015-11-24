@@ -7,7 +7,6 @@
     #- 'deb-src http://packages.groonga.org/ubuntu/ precise universe'
 
 - name: install mecab
-  sudo: yes
   apt:
     name: "{{ item }}={{ version }}*"
     state: present
